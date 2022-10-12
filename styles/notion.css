@@ -10,6 +10,15 @@
 .notion {
   --notion-max-width: 720px;
   --notion-header-height: 54px;
+  --fg-color: var(--chakra-colors-chakra-body-text)
+}
+
+.notion * {
+  border-color: var(--chakra-colors-chakra-border-color) !important;
+}
+
+.notion-frame {
+  padding: 0;
 }
 
 .notion-page {
@@ -168,6 +177,7 @@
 
 .notion-collection-row {
   padding-bottom: 1em;
+  border-color: var(--chakra-colors-chakra-border-color)
 }
 
 .notion-collection-page-properties .notion-collection-column-title {

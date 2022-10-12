@@ -1,3 +1,5 @@
+import { Heading, Text } from '@chakra-ui/react'
+import Image from 'next/image'
 import * as React from 'react'
 import { PageHead } from './PageHead'
 
@@ -12,11 +14,11 @@ export const ErrorPage: React.FC<{ statusCode: number }> = ({ statusCode }) => {
 
       <div className={styles.container}>
         <main className={styles.main}>
-          <h1>Error Loading Page</h1>
+          <Heading as={'h1'}>Error Loading Page</Heading>
 
-          {statusCode && <p>Error code: {statusCode}</p>}
+          {statusCode && <Text>Error code: {statusCode}</Text>}
 
-          <img src='/error.png' alt='Error' className={styles.errorImage} />
+          <Image src='/error.png' alt='Error' className={styles.errorImage} />
         </main>
       </div>
     </>

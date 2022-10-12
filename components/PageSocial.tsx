@@ -1,5 +1,4 @@
 import * as React from 'react'
-import cs from 'classnames'
 
 import * as config from 'lib/config'
 
@@ -74,7 +73,7 @@ export const PageSocial: React.FC = () => {
     <div className={styles.pageSocial}>
       {socialLinks.map((action) => (
         <a
-          className={cs(styles.action, styles[action.name])}
+          className={styles.action || styles[action.name]}
           href={action.href}
           key={action.name}
           title={action.title}

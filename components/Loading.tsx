@@ -1,10 +1,12 @@
+import { Box, Spinner } from '@chakra-ui/react'
 import * as React from 'react'
-import { LoadingIcon } from './LoadingIcon'
-
-import styles from './styles.module.css'
 
 export const Loading: React.FC = () => (
-  <div className={styles.container}>
-    <LoadingIcon />
-  </div>
+  <Box
+    minH="100vh"
+    display="grid"
+    placeContent="center"
+  >
+    <Spinner size={'lg'} />
+  </Box>
 )

@@ -1,87 +1,81 @@
 import * as React from 'react'
-import cs from 'classnames'
-import { IoSunnyOutline } from '@react-icons/all-files/io5/IoSunnyOutline'
-import { IoMoonSharp } from '@react-icons/all-files/io5/IoMoonSharp'
 import { Header, Breadcrumbs, Search, useNotionContext } from 'react-notion-x'
 import * as types from 'notion-types'
 
-import { useDarkMode } from 'lib/use-dark-mode'
 import { navigationStyle, navigationLinks, isSearchEnabled } from 'lib/config'
+import ColorModeToggle from './ColorModeToggle'
+import { chakra, HStack, Link as ChakraLink } from '@chakra-ui/react'
+import Link from 'next/link'
 
-import styles from './styles.module.css'
-
-const ToggleThemeButton = () => {
-  const [hasMounted, setHasMounted] = React.useState(false)
-  const { isDarkMode, toggleDarkMode } = useDarkMode()
-
-  React.useEffect(() => {
-    setHasMounted(true)
-  }, [])
-
-  const onToggleTheme = React.useCallback(() => {
-    toggleDarkMode()
-  }, [toggleDarkMode])
-
-  return (
-    <div
-      className={cs('breadcrumb', 'button', !hasMounted && styles.hidden)}
-      onClick={onToggleTheme}
-    >
-      {hasMounted && isDarkMode ? <IoMoonSharp /> : <IoSunnyOutline />}
-    </div>
-  )
-}
+const ChakraBreadcrumbs = chakra(Breadcrumbs);
+const ChakraHeader = chakra(Header);
+const ChakraSearch = chakra(Search);
 
 export const NotionPageHeader: React.FC<{
   block: types.CollectionViewPageBlock | types.PageBlock
 }> = ({ block }) => {
-  const { components, mapPageUrl } = useNotionContext()
+  const { mapPageUrl } = useNotionContext()
 
   if (navigationStyle === 'default') {
-    return <Header block={block} />
+    return <ChakraHeader block={block} />
   }
 
   return (
-    <header className='notion-header'>
-      <div className='notion-nav-header'>
-        <Breadcrumbs block={block} rootOnly={true} />
+    <HStack
+      top="0"
+      left="0"
+      position="sticky"
+      zIndex="sticky"
+      justifyContent="space-between"
+      px="5"
+      py="2.5"
+      background={'chakra-body-bg'}
+    >
+      <ChakraBreadcrumbs
+        block={block}
+        rootOnly={true}
+        textColor={'chakra-body-text'}
+      />
 
-        <div className='notion-nav-header-rhs breadcrumbs'>
-          {navigationLinks
-            ?.map((link, index) => {
-              if (!link.pageId && !link.url) {
-                return null
-              }
+      <HStack spacing={'5'}>
+        {navigationLinks
+          ?.map((link, index) => {
+            if (!link.pageId && !link.url) {
+              return null
+            }
 
-              if (link.pageId) {
-                return (
-                  <components.PageLink
-                    href={mapPageUrl(link.pageId)}
-                    key={index}
-                    className={cs(styles.navLink, 'breadcrumb', 'button')}
-                  >
+            if (link.pageId) {
+              return (
+                <Link
+                  href={mapPageUrl(link.pageId)}
+                  key={index}
+                  passHref
+                >
+                  <ChakraLink>
                     {link.title}
-                  </components.PageLink>
-                )
-              } else {
-                return (
-                  <components.Link
-                    href={link.url}
-                    key={index}
-                    className={cs(styles.navLink, 'breadcrumb', 'button')}
-                  >
+                  </ChakraLink>
+                </Link>
+              )
+            } else {
+              return (
+                <Link
+                  href={link.url}
+                  key={index}
+                >
+                  <ChakraLink>
                     {link.title}
-                  </components.Link>
-                )
-              }
-            })
-            .filter(Boolean)}
+                  </ChakraLink>
+                </Link>
+              )
+            }
+          })
+          .filter(Boolean)
+        }
 
-          <ToggleThemeButton />
+        <ColorModeToggle />
 
-          {isSearchEnabled && <Search block={block} title={null} />}
-        </div>
-      </div>
-    </header>
+        {isSearchEnabled && <ChakraSearch block={block} title={null} />}
+      </HStack>
+    </HStack>
   )
 }

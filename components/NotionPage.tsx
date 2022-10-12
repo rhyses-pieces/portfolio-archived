@@ -2,13 +2,9 @@ import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
-import cs from 'classnames'
 import { useRouter } from 'next/router'
 import { useSearchParam } from 'react-use'
-import BodyClassName from 'react-body-classname'
 import { PageBlock } from 'notion-types'
-
-import TweetEmbed from 'react-tweet-embed'
 
 // core notion renderer
 import { NotionRenderer } from 'react-notion-x'
@@ -18,7 +14,6 @@ import { getBlockTitle, getPageProperty, formatDate } from 'notion-utils'
 import { mapPageUrl, getCanonicalPageUrl } from 'lib/map-page-url'
 import { mapImageUrl } from 'lib/map-image-url'
 import { searchNotion } from 'lib/search-notion'
-import { useDarkMode } from 'lib/use-dark-mode'
 import * as types from 'lib/types'
 import * as config from 'lib/config'
 
@@ -29,62 +24,16 @@ import { PageHead } from './PageHead'
 import { PageAside } from './PageAside'
 import { Footer } from './Footer'
 import { NotionPageHeader } from './NotionPageHeader'
-import { GitHubShareButton } from './GitHubShareButton'
+import { chakra, useColorModeValue } from '@chakra-ui/react'
 
-import styles from './styles.module.css'
-
-// -----------------------------------------------------------------------------
 // dynamic imports for optional components
-// -----------------------------------------------------------------------------
-
-const Code = dynamic(() =>
-  import('react-notion-x/build/third-party/code').then(async (m) => {
-    // add / remove any prism syntaxes here
-    await Promise.all([
-      import('prismjs/components/prism-markup-templating.js'),
-      import('prismjs/components/prism-markup.js'),
-      import('prismjs/components/prism-bash.js'),
-      import('prismjs/components/prism-c.js'),
-      import('prismjs/components/prism-cpp.js'),
-      import('prismjs/components/prism-csharp.js'),
-      import('prismjs/components/prism-docker.js'),
-      import('prismjs/components/prism-java.js'),
-      import('prismjs/components/prism-js-templates.js'),
-      import('prismjs/components/prism-coffeescript.js'),
-      import('prismjs/components/prism-diff.js'),
-      import('prismjs/components/prism-git.js'),
-      import('prismjs/components/prism-go.js'),
-      import('prismjs/components/prism-graphql.js'),
-      import('prismjs/components/prism-handlebars.js'),
-      import('prismjs/components/prism-less.js'),
-      import('prismjs/components/prism-makefile.js'),
-      import('prismjs/components/prism-markdown.js'),
-      import('prismjs/components/prism-objectivec.js'),
-      import('prismjs/components/prism-ocaml.js'),
-      import('prismjs/components/prism-python.js'),
-      import('prismjs/components/prism-reason.js'),
-      import('prismjs/components/prism-rust.js'),
-      import('prismjs/components/prism-sass.js'),
-      import('prismjs/components/prism-scss.js'),
-      import('prismjs/components/prism-solidity.js'),
-      import('prismjs/components/prism-sql.js'),
-      import('prismjs/components/prism-stylus.js'),
-      import('prismjs/components/prism-swift.js'),
-      import('prismjs/components/prism-wasm.js'),
-      import('prismjs/components/prism-yaml.js')
-    ])
-    return m.Code
-  })
-)
 
 const Collection = dynamic(() =>
   import('react-notion-x/build/third-party/collection').then(
     (m) => m.Collection
   )
 )
-const Equation = dynamic(() =>
-  import('react-notion-x/build/third-party/equation').then((m) => m.Equation)
-)
+
 const Pdf = dynamic(
   () => import('react-notion-x/build/third-party/pdf').then((m) => m.Pdf),
   {
@@ -101,10 +50,6 @@ const Modal = dynamic(
     ssr: false
   }
 )
-
-const Tweet = ({ id }: { id: string }) => {
-  return <TweetEmbed tweetId={id} />
-}
 
 const propertyLastEditedTimeValue = (
   { block, pageHeader },
@@ -147,6 +92,9 @@ const propertyTextValue = (
   return defaultFn()
 }
 
+// chakra stuff
+const ChakraNotion = chakra(NotionRenderer)
+
 export const NotionPage: React.FC<types.PageProps> = ({
   site,
   recordMap,
@@ -154,18 +102,16 @@ export const NotionPage: React.FC<types.PageProps> = ({
   pageId
 }) => {
   const router = useRouter()
+  const darkMode = useColorModeValue(false, true)
   const lite = useSearchParam('lite')
 
   const components = React.useMemo(
     () => ({
       nextImage: Image,
       nextLink: Link,
-      Code,
       Collection,
-      Equation,
       Pdf,
       Modal,
-      Tweet,
       Header: NotionPageHeader,
       propertyLastEditedTimeValue,
       propertyTextValue,
@@ -176,8 +122,6 @@ export const NotionPage: React.FC<types.PageProps> = ({
 
   // lite mode is for oembed
   const isLiteMode = lite === 'true'
-
-  const { isDarkMode } = useDarkMode()
 
   const siteMapPageUrl = React.useMemo(() => {
     const params: any = {}
@@ -258,15 +202,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
         url={canonicalPageUrl}
       />
 
-      {isLiteMode && <BodyClassName className='notion-lite' />}
-      {isDarkMode && <BodyClassName className='dark-mode' />}
-
-      <NotionRenderer
-        bodyClassName={cs(
-          styles.notion,
-          pageId === site.rootNotionPageId && 'index-page'
-        )}
-        darkMode={isDarkMode}
+      <ChakraNotion
+        darkMode={darkMode}
         components={components}
         recordMap={recordMap}
         rootPageId={site.rootNotionPageId}
@@ -284,9 +221,9 @@ export const NotionPage: React.FC<types.PageProps> = ({
         searchNotion={config.isSearchEnabled ? searchNotion : null}
         pageAside={pageAside}
         footer={footer}
+        background={'chakra-body-bg'}
+        textColor={'chakra-body-text'}
       />
-
-      <GitHubShareButton />
     </>
   )
 }

@@ -4,9 +4,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 module.exports = withBundleAnalyzer({
-  compiler: {
-    styledComponents: true,
-  },
   staticPageGenerationTimeout: 300,
   images: {
     domains: [

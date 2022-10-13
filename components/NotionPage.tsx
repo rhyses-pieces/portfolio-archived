@@ -28,6 +28,10 @@ import { chakra, useColorModeValue } from '@chakra-ui/react'
 
 // dynamic imports for optional components
 
+const Code = dynamic(() =>
+  import('react-notion-x/build/third-party/code').then((m) => m.Code)
+)
+
 const Collection = dynamic(() =>
   import('react-notion-x/build/third-party/collection').then(
     (m) => m.Collection
@@ -37,19 +41,17 @@ const Collection = dynamic(() =>
 const Pdf = dynamic(
   () => import('react-notion-x/build/third-party/pdf').then((m) => m.Pdf),
   {
-    ssr: false
+    ssr: false,
   }
 )
-const Modal = dynamic(
-  () =>
-    import('react-notion-x/build/third-party/modal').then((m) => {
-      m.Modal.setAppElement('.notion-viewport')
-      return m.Modal
-    }),
-  {
-    ssr: false
+
+const ChakraPdf = chakra(Pdf, {
+  baseStyle: {
+    marginTop: '100vh',
+    display: 'grid',
+    justifyContent: 'space-evenly'
   }
-)
+})
 
 const propertyLastEditedTimeValue = (
   { block, pageHeader },
@@ -109,9 +111,9 @@ export const NotionPage: React.FC<types.PageProps> = ({
     () => ({
       nextImage: Image,
       nextLink: Link,
+      Code,
       Collection,
-      Pdf,
-      Modal,
+      Pdf: ChakraPdf,
       Header: NotionPageHeader,
       propertyLastEditedTimeValue,
       propertyTextValue,
@@ -221,8 +223,36 @@ export const NotionPage: React.FC<types.PageProps> = ({
         searchNotion={config.isSearchEnabled ? searchNotion : null}
         pageAside={pageAside}
         footer={footer}
-        background={'chakra-body-bg'}
-        textColor={'chakra-body-text'}
+        lineHeight={'taller'}
+        sx={{
+          '--bg-color': 'colors.green.50',
+          '--bg-color-0': 'colors.green.100',
+          '--fg-color': 'colors.blue.900',
+          '--chakra-colors-chakra-border-color': 'colors.blackAlpha.300',
+          '.notion-link': {
+            color: 'teal.600',
+            textDecor: 'underline wavy',
+            textUnderlineOffset: '5px',
+            borderBottom: 'none',
+            opacity: 1,
+            _hover: {
+              color: 'black',
+              textDecor: 'none'
+            }
+          },
+          '_dark': {
+            '--bg-color': 'colors.purple.900',
+            '--bg-color-0': 'colors.purple.800',
+            '--fg-color': 'colors.gray.50',
+            '.notion-link': {
+              color: 'pink.300',
+              _hover: {
+                color: 'white'
+              }
+            },
+            '--chakra-colors-chakra-border-color': 'colors.whiteAlpha.300',
+          },
+        }}
       />
     </>
   )

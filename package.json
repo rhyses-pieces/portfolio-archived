@@ -27,10 +27,12 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.0.11",
     "@chakra-ui/react": "^2.3.5",
+    "@chakra-ui/theme-tools": "^2.0.12",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@fontsource/bluu-next": "^4.5.0",
     "@fontsource/victor-mono": "^4.5.4",
+    "@fontsource/work-sans": "^4.5.12",
     "@keyvhq/core": "^1.6.9",
     "@keyvhq/redis": "^1.6.10",
     "@react-icons/all-files": "^4.1.0",

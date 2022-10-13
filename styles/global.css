@@ -14,8 +14,6 @@ html {
 }
 
 body {
-  --notion-font: var(--chakra-fonts-body);
-  font-family: var(--notion-font);
   overflow-x: hidden;
 }
 

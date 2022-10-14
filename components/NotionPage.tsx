@@ -239,6 +239,36 @@ export const NotionPage: React.FC<types.PageProps> = ({
               transform: 'rotate(10deg)'
             }
           },
+          '.notion-collection-card': {
+            transition: 'all 0.3s ease-in',
+            _hover: {
+              bg: 'transparent'
+            }
+          },
+          '.notion-collection-card .notion-page-title-text': {
+            _after: {
+              display: 'block',
+              opacity: '0',
+              width: '0',
+              bg: 'green.100',
+            }
+          },
+          '.notion-collection-card-cover': {
+            borderBottom: 'none',
+            boxShadow: 'md',
+            borderRadius: 'lg',
+            transition: 'filter 0.5s ease-in-out',
+            filter: 'none',
+          },
+          '.notion-collection-card:hover .notion-collection-card-cover': {
+            filter: 'contrast(0.9)'
+          },
+          '.notion-collection-card:hover .notion-page-title': {
+            _after: {
+              opacity: '1',
+              width: '100%'
+            }
+          },
           '.notion-link': {
             display: 'inline-block',
             color: 'teal.600',
@@ -280,6 +310,9 @@ export const NotionPage: React.FC<types.PageProps> = ({
               _hover: {
                 bg: 'purple.800'
               }
+            },
+            '.notion-collection-card:hover .notion-collection-card-cover': {
+              filter: 'contrast(0.6)'
             },
             '--chakra-colors-chakra-border-color': 'colors.whiteAlpha.300',
           },

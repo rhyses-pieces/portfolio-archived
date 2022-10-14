@@ -45,14 +45,6 @@ const Pdf = dynamic(
   }
 )
 
-const ChakraPdf = chakra(Pdf, {
-  baseStyle: {
-    marginTop: '100vh',
-    display: 'grid',
-    justifyContent: 'space-evenly'
-  }
-})
-
 const propertyLastEditedTimeValue = (
   { block, pageHeader },
   defaultFn: () => React.ReactNode
@@ -97,6 +89,14 @@ const propertyTextValue = (
 // chakra stuff
 const ChakraNotion = chakra(NotionRenderer)
 
+const ChakraPdf = chakra(Pdf, {
+  baseStyle: {
+    marginTop: '90vh',
+    display: 'grid',
+    justifyContent: 'space-evenly'
+  }
+})
+
 export const NotionPage: React.FC<types.PageProps> = ({
   site,
   recordMap,
@@ -104,8 +104,9 @@ export const NotionPage: React.FC<types.PageProps> = ({
   pageId
 }) => {
   const router = useRouter()
-  const darkMode = useColorModeValue(false, true)
   const lite = useSearchParam('lite')
+
+  const darkMode = useColorModeValue(false, true)
 
   const components = React.useMemo(
     () => ({
@@ -229,15 +230,40 @@ export const NotionPage: React.FC<types.PageProps> = ({
           '--bg-color-0': 'colors.green.100',
           '--fg-color': 'colors.blue.900',
           '--chakra-colors-chakra-border-color': 'colors.blackAlpha.300',
+          '.notion-page-scroller': {
+            marginTop: '5vh'
+          },
+          '.notion-page-icon': {
+            transition: 'all 0.25s ease-in',
+            _hover: {
+              transform: 'rotate(10deg)'
+            }
+          },
           '.notion-link': {
+            display: 'inline-block',
             color: 'teal.600',
-            textDecor: 'underline wavy',
-            textUnderlineOffset: '5px',
             borderBottom: 'none',
+            textDecor: 'underline wavy',
+            textDecorationColor: 'inherit',
+            textDecorationSkip: 'none',
+            textUnderlineOffset: '5px',
             opacity: 1,
+            transition: 'color 0.5s ease, text-decoration-color 0.3s ease-in-out',
             _hover: {
               color: 'black',
-              textDecor: 'none'
+              textDecorationColor: 'transparent',
+              transform: 'rotate(2deg)',
+            },
+            _focusVisible: {
+              boxShadow: 'var(--chakra-shadows-outline)',
+              textDecor: 'underline solid',
+              transform: 'rotate(0deg)'
+            }
+          },
+          '.notion-bookmark': {
+            transition: 'all 0.2s ease-in',
+            _hover: {
+              bg: 'green.100'
             }
           },
           '_dark': {
@@ -248,6 +274,11 @@ export const NotionPage: React.FC<types.PageProps> = ({
               color: 'pink.300',
               _hover: {
                 color: 'white'
+              }
+            },
+            '.notion-bookmark': {
+              _hover: {
+                bg: 'purple.800'
               }
             },
             '--chakra-colors-chakra-border-color': 'colors.whiteAlpha.300',

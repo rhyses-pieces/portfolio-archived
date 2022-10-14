@@ -29,7 +29,11 @@ export const NotionPageHeader: React.FC<{
       justifyContent="space-between"
       px="5"
       py="2.5"
-      background={'chakra-body-bg'}
+      bgGradient={'linear(to-r, teal.50, purple.50)'}
+      _dark={{
+        bgGradient: 'linear(to-l, blue.900, pink.900)'
+      }}
+      boxShadow={'md'}
     >
       <ChakraBreadcrumbs
         block={block}

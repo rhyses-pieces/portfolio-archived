@@ -1,4 +1,5 @@
-import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+import { extendTheme, StyleFunctionProps, type ThemeConfig } from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
 import "@fontsource/bluu-next";
 import "@fontsource/victor-mono";
 import "@fontsource/work-sans";
@@ -15,6 +16,14 @@ const config: ThemeConfig = {
 }
 
 const theme = extendTheme({
+  styles: {
+    global: (props: StyleFunctionProps) => ({
+      body: {
+        bg: mode('green.50', 'purple.900')(props),
+        color: mode('blue.900', 'gray.50')(props),
+      }
+    })
+  },
   fonts,
   config
 })

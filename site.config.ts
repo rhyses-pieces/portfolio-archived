@@ -43,11 +43,12 @@ export default siteConfig({
   // any pages defined here will override their default URL paths
   // example:
   //
-  // pageUrlOverrides: {
-  //   '/foo': '6430d3d6ba914586be18a646143f3a87',
-  //   '/bar': '0be6efce9daf42688f65c76b89f8eb27'
-  // },
-  pageUrlOverrides: null,
+  pageUrlOverrides: {
+    '/about': '0fda07c00a51458d8dc81685d885735a',
+    '/projects': '08598f44622243f7b9d26520b4f3c0de',
+    '/resume': '8bf7d56317f2456f8916c91937d96597'
+  },
+  // pageUrlOverrides: null,
 
   // whether to use the default notion navigation style or a custom one with links to
   // important pages
@@ -56,20 +57,19 @@ export default siteConfig({
   navigationLinks: [
     {
       title: 'About',
-      pageId: '0fda07c00a51458d8dc81685d885735a'
+      url: '/about'
     },
     {
       title: 'Contact',
-      pageId: null,
       url: '/contact'
     },
     {
       title: 'Projects',
-      pageId: '08598f44622243f7b9d26520b4f3c0de'
+      url: '/projects'
     },
     {
       title: 'Resume',
-      pageId: '8bf7d56317f2456f8916c91937d96597'
+      url: '/resume'
     }
   ]
 })

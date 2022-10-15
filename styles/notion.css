@@ -339,7 +339,9 @@
   padding: 0;
 }
 
-.notion-block-260baa77f1e1428b97fb14ac99c7c385 {
+/* hide blocks */
+
+.notion-block-260baa77f1e1428b97fb14ac99c7c385, .notion-block-d6b61af394eb4470a8a2fbf0564d3dcb {
   display: none;
 }
 

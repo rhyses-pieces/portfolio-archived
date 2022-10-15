@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Header, Breadcrumbs, Search, useNotionContext } from 'react-notion-x'
+import { Header, Search, useNotionContext } from 'react-notion-x'
 import * as types from 'notion-types'
 
 import { navigationStyle, navigationLinks, isSearchEnabled } from 'lib/config'
@@ -9,7 +9,6 @@ import { Box, chakra, HStack } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
-const ChakraBreadcrumbs = chakra(Breadcrumbs);
 const ChakraHeader = chakra(Header);
 const ChakraSearch = chakra(Search);
 
@@ -38,11 +37,9 @@ export const NotionPageHeader: React.FC<{
       }}
       boxShadow={'md'}
     >
-      <ChakraBreadcrumbs
-        block={block}
-        rootOnly={true}
-        textColor={'chakra-body-text'}
-      />
+      <PageLink href={'/'}>
+        Home
+      </PageLink>
 
       <HStack spacing={'5'}>
         {navigationLinks
@@ -82,6 +79,7 @@ export const NotionPageHeader: React.FC<{
                 <PageLink
                   href={link.url}
                   key={index}
+                  pos='relative'
                 >
                   {link.title}
                   {router.asPath === link.url && (

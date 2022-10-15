@@ -23,7 +23,6 @@ import { Page404 } from './Page404'
 import { PageHead } from './PageHead'
 import { PageAside } from './PageAside'
 import { Footer } from './Footer'
-import { NotionPageHeader } from './NotionPageHeader'
 import { chakra, useColorModeValue } from '@chakra-ui/react'
 
 // dynamic imports for optional components
@@ -115,7 +114,6 @@ export const NotionPage: React.FC<types.PageProps> = ({
       Code,
       Collection,
       Pdf: ChakraPdf,
-      Header: NotionPageHeader,
       propertyLastEditedTimeValue,
       propertyTextValue,
       propertyDateValue
@@ -233,7 +231,10 @@ export const NotionPage: React.FC<types.PageProps> = ({
           '.notion-page-scroller': {
             marginTop: '5vh'
           },
-          '.notion-page-icon': {
+          '.notion-header': {
+            display: 'none',
+          },
+          '.notion-page-icon-hero .notion-page-icon': {
             transition: 'all 0.25s ease-in',
             _hover: {
               transform: 'rotate(10deg)'
@@ -245,14 +246,6 @@ export const NotionPage: React.FC<types.PageProps> = ({
               bg: 'transparent'
             }
           },
-          '.notion-collection-card .notion-page-title-text': {
-            _after: {
-              display: 'block',
-              opacity: '0',
-              width: '0',
-              bg: 'green.100',
-            }
-          },
           '.notion-collection-card-cover': {
             borderBottom: 'none',
             boxShadow: 'md',
@@ -260,13 +253,30 @@ export const NotionPage: React.FC<types.PageProps> = ({
             transition: 'filter 0.5s ease-in-out',
             filter: 'none',
           },
-          '.notion-collection-card:hover .notion-collection-card-cover': {
-            filter: 'contrast(0.9)'
+          '.notion-collection-card .notion-property-title': {
+            display: 'grid',
+            justifyContent: 'center',
           },
-          '.notion-collection-card:hover .notion-page-title': {
-            _after: {
-              opacity: '1',
-              width: '100%'
+          '.notion-collection-card .notion-page-title-text': {
+            bgGradient: 'linear(to-l, green.100, teal.100)',
+            backgroundPosition: 'left',
+            backgroundSize: '0 100%',
+            backgroundRepeat: 'no-repeat',
+            py: '0.5',
+            px: '2',
+            transition: '.4s, background-position 0s'
+          },
+          '.notion-collection-card:hover .notion-collection-card-cover': {
+            filter: 'contrast(0.8)'
+          },
+          '.notion-collection-card:hover .notion-page-title-text': {
+            backgroundSize: '100% 100%',
+            backgroundPosition: 'right',
+          },
+          '.notion-bookmark': {
+            transition: 'all 0.2s ease-in',
+            _hover: {
+              bg: 'green.100'
             }
           },
           '.notion-link': {
@@ -290,12 +300,6 @@ export const NotionPage: React.FC<types.PageProps> = ({
               transform: 'rotate(0deg)'
             }
           },
-          '.notion-bookmark': {
-            transition: 'all 0.2s ease-in',
-            _hover: {
-              bg: 'green.100'
-            }
-          },
           '_dark': {
             '--bg-color': 'colors.purple.900',
             '--bg-color-0': 'colors.purple.800',
@@ -310,6 +314,9 @@ export const NotionPage: React.FC<types.PageProps> = ({
               _hover: {
                 bg: 'purple.800'
               }
+            },
+            '.notion-collection-card .notion-page-title-text': {
+              bgGradient: 'linear(to-r, purple.800, pink.800)'
             },
             '.notion-collection-card:hover .notion-collection-card-cover': {
               filter: 'contrast(0.6)'

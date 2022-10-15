@@ -19,13 +19,42 @@ import {
   fathomId,
   fathomConfig
 } from 'lib/config'
-import { ChakraProvider } from '@chakra-ui/react'
+
+import * as types from "notion-types"
+import { Box, ChakraProvider } from '@chakra-ui/react'
+import { AnimatePresence, motion, Variants } from 'framer-motion'
+import { NotionPageHeader } from 'components/NotionPageHeader'
 
 if (!isServer) {
   bootstrap()
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+const variants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: -25,
+  },
+  enter: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      delay: 0.25,
+      ease: 'circIn'
+    }
+  },
+  exit: {
+    opacity: 0,
+    y: -50,
+    transition: {
+      duration: 0.5,
+      delay: 0.25,
+      ease: 'circOut'
+    }
+  }
+}
+
+export default function App({ Component, pageProps }: AppProps, block: types.PageBlock | types.CollectionViewPageBlock) {
   const router = useRouter()
 
   React.useEffect(() => {
@@ -48,7 +77,23 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <NotionPageHeader block={block} />
+      <AnimatePresence 
+        mode='wait'
+        initial={false} 
+        onExitComplete={() => { window.scrollTo({ top: 0 })}}
+      >
+        <Box
+          as={motion.div}
+          key={router.asPath}
+          variants={variants}
+          initial="hidden"
+          animate="enter"
+          exit="exit"
+        >
+          <Component {...pageProps} />
+        </Box>
+      </AnimatePresence>
     </ChakraProvider>
   )
 }

@@ -4,8 +4,10 @@ import * as types from 'notion-types'
 
 import { navigationStyle, navigationLinks, isSearchEnabled } from 'lib/config'
 import ColorModeToggle from './ColorModeToggle'
-import { chakra, HStack, Link as ChakraLink } from '@chakra-ui/react'
-import Link from 'next/link'
+import PageLink from './PageLink'
+import { Box, chakra, HStack } from '@chakra-ui/react'
+import { motion } from 'framer-motion'
+import { useRouter } from 'next/router'
 
 const ChakraBreadcrumbs = chakra(Breadcrumbs);
 const ChakraHeader = chakra(Header);
@@ -15,6 +17,7 @@ export const NotionPageHeader: React.FC<{
   block: types.CollectionViewPageBlock | types.PageBlock
 }> = ({ block }) => {
   const { mapPageUrl } = useNotionContext()
+  const router = useRouter()
 
   if (navigationStyle === 'default') {
     return <ChakraHeader block={block} />
@@ -50,26 +53,54 @@ export const NotionPageHeader: React.FC<{
 
             if (link.pageId) {
               return (
-                <Link
+                <PageLink
                   href={mapPageUrl(link.pageId)}
                   key={index}
-                  passHref
+                  pos='relative'
                 >
-                  <ChakraLink>
-                    {link.title}
-                  </ChakraLink>
-                </Link>
+                  {link.title}
+                  {router.asPath === mapPageUrl(link.pageId) && (
+                    <Box
+                      as={motion.div}
+                      pos='absolute'
+                      bottom='-1px'
+                      left='0'
+                      width='100%'
+                      height='2px'
+                      bg='blue.700'
+                      _dark={{
+                        bg: 'white'
+                      }}
+                      layoutId="navigate"
+                      animate
+                    />
+                  )}
+                </PageLink>
               )
             } else {
               return (
-                <Link
+                <PageLink
                   href={link.url}
                   key={index}
                 >
-                  <ChakraLink>
-                    {link.title}
-                  </ChakraLink>
-                </Link>
+                  {link.title}
+                  {router.asPath === link.url && (
+                    <Box
+                      as={motion.div}
+                      pos='absolute'
+                      bottom='-1px'
+                      left='0'
+                      width='100%'
+                      height='2px'
+                      bg='blue.700'
+                      _dark={{
+                        bg: 'white'
+                      }}
+                      layoutId="navigate"
+                      animate
+                    />
+                  )}
+                </PageLink>
               )
             }
           })

@@ -10,7 +10,7 @@ export default siteConfig({
 
   // basic site info (required)
   name: 'Rhyses Pieces',
-  domain: 'nextjs-notion-starter-kit.transitivebullsh.it',
+  domain: 'portfolio-leventii.vercel.app',
   author: 'Rhys Kim',
 
   // open graph metadata (optional)

@@ -13,6 +13,10 @@ module.exports = withBundleAnalyzer({
       'pbs.twimg.com',
       'abs.twimg.com',
       's3.us-west-2.amazonaws.com',
+      'portfolio-leventii.vercel.app',
+      'portfolio-ten-chi-16.vercel.app',
+      'rhyses-pieces.dev',
+      'www.rhyses-pieces.dev'
     ],
     formats: ['image/avif', 'image/webp'],
     dangerouslyAllowSVG: true,

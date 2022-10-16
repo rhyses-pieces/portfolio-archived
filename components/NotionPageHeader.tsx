@@ -6,11 +6,97 @@ import { navigationStyle, navigationLinks, isSearchEnabled } from 'lib/config'
 import ColorModeToggle from './ColorModeToggle'
 import PageLink from './PageLink'
 import { Box, chakra, HStack } from '@chakra-ui/react'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { useRouter } from 'next/router'
 
 const ChakraHeader = chakra(Header);
 const ChakraSearch = chakra(Search);
+
+const homeLink: Variants = {
+  inactive: {
+    y: 2.5,
+    transition: {
+      delay: 1,
+      delayChildren: 0.5,
+      duration: 0.5,
+      ease: 'circOut'
+    }
+  },
+  hovered: {
+    y: 0,
+    transition: {
+      duration: 1,
+      ease: 'circInOut'
+    }
+  },
+}
+
+const lineMotion: Variants = {
+  inactive: {
+    x: -100,
+    transition: {
+      duration: 1,
+      ease: 'easeOut',
+    }
+  },
+  hovered: {
+    x: 0,
+    transition: {
+      duration: 0.5,
+      ease: 'circInOut'
+    }
+  }
+}
+
+const pageVariant: Variants = {
+  inactive: {
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+      ease: 'backOut'
+    }
+  },
+  hovered: {
+    scale: 1.2,
+    y: 0,
+    transition: {
+      duration: 0.2,
+      ease: 'easeIn'
+    }
+  },
+  tapped: {
+    scale: 0.9,
+    y: 2,
+    transition: {
+      duration: 0.2,
+      ease: 'linear'
+    }
+  },
+}
+
+const staticVariant: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 2,
+    scale: 1
+  },
+  inactive: {
+    opacity: 1,
+    y: 0,
+    scale: 1
+  },
+  hovered: {
+    opacity: 1,
+    y: 0,
+    scale: 0.5
+  },
+  tapped: {
+    opacity: 1,
+    y: 0,
+    scale: 0.5
+  },
+}
 
 export const NotionPageHeader: React.FC<{
   block: types.CollectionViewPageBlock | types.PageBlock
@@ -37,9 +123,40 @@ export const NotionPageHeader: React.FC<{
       }}
       boxShadow={'md'}
     >
-      <PageLink href={'/'}>
-        Home
-      </PageLink>
+      <Box
+        as={motion.div}
+        initial="inactive"
+        whileHover="hovered"
+        animate="inactive"
+      >
+        <PageLink
+          href={'/'}
+          pos="relative"
+          fontWeight="bold"
+          lineHeight="taller"
+          overflowX="hidden"
+          overflowY="visible"
+          variants={homeLink}
+        >
+          Home
+          <Box
+            as={motion.div}
+            pos='absolute'
+            top='0'
+            left='0'
+            color='transparent'
+            textDecor='underline wavy'
+            textDecorationColor='blue.900'
+            textUnderlineOffset='5px'
+            variants={lineMotion}
+            _dark={{
+              textDecorationColor: 'white'
+            }}
+          >
+            Home
+          </Box>
+        </PageLink>
+      </Box>
 
       <HStack spacing={'5'}>
         {navigationLinks
@@ -54,6 +171,10 @@ export const NotionPageHeader: React.FC<{
                   href={mapPageUrl(link.pageId)}
                   key={index}
                   pos='relative'
+                  variants={pageVariant}
+                  initial="inactive"
+                  whileHover="hovered"
+                  whileTap="tapped"
                 >
                   {link.title}
                   {router.asPath === mapPageUrl(link.pageId) && (
@@ -69,7 +190,9 @@ export const NotionPageHeader: React.FC<{
                         bg: 'white'
                       }}
                       layoutId="navigate"
-                      animate
+                      variants={staticVariant}
+                      initial="hidden"
+                      animate="inactive"
                     />
                   )}
                 </PageLink>
@@ -80,6 +203,10 @@ export const NotionPageHeader: React.FC<{
                   href={link.url}
                   key={index}
                   pos='relative'
+                  variants={pageVariant}
+                  initial="inactive"
+                  whileHover="hovered"
+                  whileTap="tapped"
                 >
                   {link.title}
                   {router.asPath === link.url && (
@@ -95,7 +222,9 @@ export const NotionPageHeader: React.FC<{
                         bg: 'white'
                       }}
                       layoutId="navigate"
-                      animate
+                      variants={staticVariant}
+                      initial="hidden"
+                      animate="inactive"
                     />
                   )}
                 </PageLink>

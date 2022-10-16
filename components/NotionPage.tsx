@@ -316,7 +316,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
               }
             },
             '.notion-collection-card .notion-page-title-text': {
-              bgGradient: 'linear(to-r, purple.800, pink.800)'
+              bgGradient: 'linear(to-r, cyan.800, pink.800)'
             },
             '.notion-collection-card:hover .notion-collection-card-cover': {
               filter: 'contrast(0.6)'

@@ -12,9 +12,6 @@ const PageLink = ({ href, children, ...props}) => {
         _hover={{
           textDecor: 'none'
         }}
-        initial={{ scale: 1, y: 0 }}
-        whileHover={{ scale: 1.1, y: 0 }}
-        whileTap={{ scale: 0.9, y: 2 }}
         {...props}
       >
         {children}

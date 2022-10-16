@@ -1,13 +1,21 @@
 import * as React from "react"
 import { useRouter } from "next/router"
-import { Box, Button, Container, FormControl, FormHelperText, FormLabel, Input, Text, Textarea, useToast } from "@chakra-ui/react"
+import { Box, Button, Container, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
+import { useForm } from "react-hook-form"
 
+import { Footer } from "components/Footer"
 import { Loading } from "components/Loading"
 import { PageHead } from "components/PageHead"
 import * as config from "lib/config"
-import { Footer } from "components/Footer"
 
 const Contact = () => {
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      message: ''
+    }
+  })
   const router = useRouter()
   const toast = useToast()
 
@@ -17,6 +25,19 @@ const Contact = () => {
 
   const description = config.description
   const canonicalPageUrl = `${config.host}${router.asPath}`
+
+  const onSubmit = async (data: any) => {
+    const res = await fetch(`${config.host}/api/submit-form`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    if (res.status === 201) {
+      toast({
+        description: 'Successfully sent message!',
+        status: 'success'
+      })
+    }
+  }
 
   return (
     <>
@@ -49,33 +70,80 @@ const Contact = () => {
 
           <Text>You can contact me at lev.k.kim@gmail.com or fill out the contact form below to get in touch with me!</Text>
 
-          <form>
-            <FormControl isRequired>
-              <FormLabel>Name</FormLabel>
-              <Input type="text" />
-            </FormControl>
+          <Box margin='2em auto'>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <VStack spacing={'5'}>
+                <FormControl
+                  isInvalid={!!errors?.name}
+                  isRequired
+                >
+                  <FormLabel htmlFor="name">Name</FormLabel>
+                  <Input 
+                    id="name"
+                    type="text"
+                    {...register('name', { 
+                      required: 'Name is required.',
+                      maxLength: {
+                        value: 80,
+                        message: 'Your name is way too long!'
+                      }
+                    })}
+                  />
+                  <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+                </FormControl>
+                  
+                <FormControl 
+                  isInvalid={!!errors?.email}
+                  isRequired
+                >
+                  <FormLabel htmlFor="email">Email address</FormLabel>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register('email', {
+                      required: 'Email is required.',
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Invalid email format!'
+                      }
+                    })}
+                  />
+                  <FormHelperText>Your email will be used to correspond with you.</FormHelperText>
+                  <FormErrorMessage>
+                    {errors?.email?.message}
+                  </FormErrorMessage>
+                </FormControl>
 
-            <FormControl isRequired>
-              <FormLabel>Email address</FormLabel>
-              <Input type="email" />
-              <FormHelperText>Your email will be used to correspond with you.</FormHelperText>
-            </FormControl>
+                <FormControl
+                  isInvalid={!!errors?.message}
+                  isRequired
+                >
+                  <FormLabel htmlFor="message">Message</FormLabel>
+                  <Textarea
+                    id="message"
+                    {...register('message', {
+                      required: 'You can’t send an empty message.',
+                      minLength: { 
+                        value: 5,
+                        message: 'Brevity is cool, but let’s get some more details!'
+                      }
+                    })}
+                  />
+                  <FormHelperText>Do you have feedback or an idea in mind? Feel free to write it here!</FormHelperText>
+                  <FormErrorMessage>{errors?.message?.message}</FormErrorMessage>
+                </FormControl>
 
-            <FormControl isRequired>
-              <FormLabel>Message</FormLabel>
-              <Textarea />
-              <FormHelperText>Do you have feedback or an idea in mind? Feel free to write it here!</FormHelperText>
-            </FormControl>
-            {Error && (
-              toast({
-                description: 'error!',
-                isClosable: true,
-                status: 'error'
-              })
-            )}
-
-            <Button>Submit</Button>
-          </form>
+                <Button
+                  colorScheme='teal'
+                  size='lg'
+                  isLoading={isSubmitting}
+                  type="submit"
+                >
+                  Submit
+                </Button>
+              </VStack>
+            </form>
+          </Box>
 
         </Container>
       </Box>

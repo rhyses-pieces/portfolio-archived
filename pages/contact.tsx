@@ -1,12 +1,14 @@
 import * as React from "react"
 import { useRouter } from "next/router"
-import { Box, Button, Container, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
+import { Box, Button, Container, FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Link, Text, Textarea, useToast, VStack } from "@chakra-ui/react"
+import { Email } from "react-obfuscate-email"
 import { useForm } from "react-hook-form"
 
 import { Footer } from "components/Footer"
 import { Loading } from "components/Loading"
 import { PageHead } from "components/PageHead"
 import * as config from "lib/config"
+import { AtSignIcon } from "@chakra-ui/icons"
 
 const Contact = () => {
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
@@ -68,7 +70,29 @@ const Contact = () => {
           </Box>
           <h1 className="notion-title">Contact</h1>
 
-          <Text>You can contact me at lev.k.kim@gmail.com or fill out the contact form below to get in touch with me!</Text>
+          <Text>You can contact me at <Link
+            as={Email}
+            email="rhys@rhyses-pieces.dev"
+            subject="Sent from 'Rhyses Pieces'"
+            display="inline-block"
+            color="teal"
+            textDecor="underline wavy"
+            textUnderlineOffset="5px"
+            transition="color 0.3s ease-in-out, text-decoration-color 0.3s ease-in-out"
+            _hover={{
+              color: "black",
+              transform: "rotate(2deg)",
+              textDecorationColor: "transparent"
+            }}
+            _dark={{
+              color: "pink.300",
+              _hover: {
+                color: "white"
+              }
+            }}
+          >
+            <AtSignIcon /> my email
+          </Link> or fill out the contact form below to get in touch with me!</Text>
 
           <Box margin='2em auto'>
             <form onSubmit={handleSubmit(onSubmit)}>

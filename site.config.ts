@@ -45,8 +45,7 @@ export default siteConfig({
   //
   pageUrlOverrides: {
     '/about': '0fda07c00a51458d8dc81685d885735a',
-    '/projects': '08598f44622243f7b9d26520b4f3c0de',
-    '/resume': '8bf7d56317f2456f8916c91937d96597'
+    '/projects': '08598f44622243f7b9d26520b4f3c0de'
   },
   // pageUrlOverrides: null,
 

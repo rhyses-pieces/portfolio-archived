@@ -5,9 +5,10 @@ import * as types from 'notion-types'
 import { navigationStyle, navigationLinks, isSearchEnabled } from 'lib/config'
 import ColorModeToggle from './ColorModeToggle'
 import PageLink from './PageLink'
-import { Box, chakra, HStack } from '@chakra-ui/react'
+import { Box, chakra, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerOverlay, HStack, IconButton, List, ListItem, useDisclosure, useMediaQuery } from '@chakra-ui/react'
 import { motion, Variants } from 'framer-motion'
 import { useRouter } from 'next/router'
+import { HamburgerIcon } from '@chakra-ui/icons'
 
 const ChakraHeader = chakra(Header);
 const ChakraSearch = chakra(Search);
@@ -16,8 +17,7 @@ const homeLink: Variants = {
   inactive: {
     y: 2.5,
     transition: {
-      delay: 1,
-      delayChildren: 0.5,
+      delayChildren: 1,
       duration: 0.5,
       ease: 'circOut'
     }
@@ -26,7 +26,7 @@ const homeLink: Variants = {
     y: 0,
     transition: {
       duration: 1,
-      ease: 'circInOut'
+      ease: 'circIn'
     }
   },
 }
@@ -103,6 +103,12 @@ export const NotionPageHeader: React.FC<{
 }> = ({ block }) => {
   const { mapPageUrl } = useNotionContext()
   const router = useRouter()
+  const [isMobile] = useMediaQuery('(max-width: 700px)', {
+    ssr: true,
+    fallback: false,
+  })
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const btnRef = React.useRef()
 
   if (navigationStyle === 'default') {
     return <ChakraHeader block={block} />
@@ -119,7 +125,7 @@ export const NotionPageHeader: React.FC<{
       py="2.5"
       bgGradient={'linear(to-r, teal.50, purple.50)'}
       _dark={{
-        bgGradient: 'linear(to-l, blue.900, pink.900)'
+        bgGradient: 'linear(to-l, gray.700, blue.800)'
       }}
       boxShadow={'md'}
     >
@@ -158,7 +164,129 @@ export const NotionPageHeader: React.FC<{
         </PageLink>
       </Box>
 
-      <HStack spacing={'5'}>
+      {isMobile ? 
+        <HStack spacing={'5'}>
+          <ColorModeToggle size={'lg'} />
+
+          <IconButton 
+            aria-label='Open Menu'
+            icon={<HamburgerIcon />}
+            variant='ghost'
+            size={'lg'}
+            ref={btnRef}
+            onClick={onOpen}
+          />
+
+          <Drawer
+            isOpen={isOpen}
+            onClose={onClose}
+            size='lg'
+            isFullHeight={true}
+            placement='bottom'
+            preserveScrollBarGap={true}
+            finalFocusRef={btnRef}
+          >
+            <DrawerOverlay />
+            <DrawerContent
+              bgGradient='linear(to-tl, green.50, cyan.50)'
+              _dark={{
+                bgGradient: 'linear(to-br, purple.900, blue.900)'
+              }}
+            >
+              <DrawerCloseButton size={'lg'} />
+
+              <DrawerBody
+                mt='20'
+                textAlign='center'
+              >
+                <List
+                  fontSize='2xl'
+                  spacing='10'
+                >
+              {navigationLinks
+                ?.map((link, index) => {
+                  if (!link.pageId && !link.url) {
+                    return null
+                  }
+
+                  if (link.pageId) {
+                    return (
+                      <ListItem key={index}>
+                        <PageLink
+                          href={mapPageUrl(link.pageId)} 
+                          onClick={onClose}
+                          fontWeight='bold'
+                          textDecor='underline wavy'
+                          textDecorationColor='teal'
+                          textUnderlineOffset='10px'
+                          bgGradient='linear(to-l, green.100, teal.100)'
+                          backgroundPosition='left'
+                          backgroundSize='0 100%'
+                          backgroundRepeat='no-repeat'
+                          py='0.5'
+                          px='2'
+                          transition='0.4s 0.2s, text-decoration-color 0.2s ease-in-out, background-position 0s'
+                          _hover={{
+                            textDecorationColor: 'transparent',
+                            backgroundSize: '100% 100%',
+                            backgroundPosition: 'right',
+                          }}
+                          _dark={{
+                            textDecorationColor: 'pink.300',
+                            bgGradient: 'linear(to-r, cyan.800, blue.800)',
+                            _hover: {
+                              textDecorationColor: 'transparent',
+                            }
+                          }}
+                        >
+                          {link.title}
+                        </PageLink>
+                      </ListItem>
+                    )
+                  } else {
+                    return (
+                      <ListItem key={index}>
+                        <PageLink
+                          href={link.url} 
+                          onClick={onClose}
+                          fontWeight='bold'
+                          textDecor='underline wavy'
+                          textDecorationColor='teal'
+                          textUnderlineOffset='10px'
+                          bgGradient='linear(to-l, green.100, teal.100)'
+                          backgroundPosition='left'
+                          backgroundSize='0 100%'
+                          backgroundRepeat='no-repeat'
+                          py='0.5'
+                          px='2'
+                          transition='0.4s 0.2s, text-decoration-color 0.2s ease-in-out, background-position 0s'
+                          _hover={{
+                            textDecorationColor: 'transparent',
+                            backgroundSize: '100% 100%',
+                            backgroundPosition: 'right',
+                          }}
+                          _dark={{
+                            textDecorationColor: 'pink.300',
+                            bgGradient: 'linear(to-r, cyan.800, blue.800)',
+                            _hover: {
+                              textDecorationColor: 'transparent',
+                            }
+                          }}
+                        >
+                          {link.title}
+                        </PageLink>
+                      </ListItem>
+                    )
+                  }
+                })
+                .filter(Boolean)
+              }
+              </List>
+              </DrawerBody>
+            </DrawerContent>
+          </Drawer>
+        </HStack>
+        : <HStack spacing={'5'}>
         {navigationLinks
           ?.map((link, index) => {
             if (!link.pageId && !link.url) {
@@ -237,7 +365,8 @@ export const NotionPageHeader: React.FC<{
         <ColorModeToggle />
 
         {isSearchEnabled && <ChakraSearch block={block} title={null} />}
-      </HStack>
+        </HStack>
+      }
     </HStack>
   )
 }

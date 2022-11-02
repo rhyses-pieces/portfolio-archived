@@ -1,0 +1,5 @@
+.resume {
+  height: 300px;
+  border-radius: var(--chakra-radii-lg);
+  box-shadow: var(--chakra-shadows-lg)
+}
